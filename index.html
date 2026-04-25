@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Calculator</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #1e1e2f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .calculator {
+        background: #2c2c3e;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        width: 300px;
+    }
+
+    .display {
+        width: 100%;
+        height: 60px;
+        font-size: 24px;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        text-align: right;
+        background: #111;
+        color: #fff;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        padding: 15px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #3e3e5e;
+        color: white;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #5a5a8a;
+    }
+
+    .operator {
+        background: #ff9500;
+    }
+
+    .equal {
+        background: #28a745;
+        grid-column: span 2;
+    }
+
+    .clear {
+        background: #dc3545;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <input type="text" id="display" class="display" disabled>
+
+    <div class="buttons">
+        <button class="clear">C</button>
+        <button>/</button>
+        <button>*</button>
+        <button>-</button>
+
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button>+</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>.</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>0</button>
+
+        <button class="equal">=</button>
+    </div>
+</div>
+
+<script>
+class Calculator {
+    constructor(display) {
+        this.display = display;
+        this.currentInput = "";
+    }
+
+    append(value) {
+        this.currentInput += value;
+        this.updateDisplay();
+    }
+
+    clear() {
+        this.currentInput = "";
+        this.updateDisplay();
+    }
+
+    calculate() {
+        try {
+            this.currentInput = eval(this.currentInput).toString();
+        } catch {
+            this.currentInput = "Error";
+        }
+        this.updateDisplay();
+    }
+
+    updateDisplay() {
+        this.display.value = this.currentInput;
+    }
+}
+
+// Initialize
+const display = document.getElementById("display");
+const calc = new Calculator(display);
+
+// Button Events
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const value = btn.innerText;
+
+        if (value === "C") calc.clear();
+        else if (value === "=") calc.calculate();
+        else calc.append(value);
+    });
+});
+
+// Keyboard Support
+document.addEventListener("keydown", (e) => {
+    if (!isNaN(e.key) || "+-*/.".includes(e.key)) {
+        calc.append(e.key);
+    }
+    else if (e.key === "Enter") {
+        calc.calculate();
+    }
+    else if (e.key === "Backspace") {
+        calc.currentInput = calc.currentInput.slice(0, -1);
+        calc.updateDisplay();
+    }
+});
+</script>
+
+</body>
+</html>
